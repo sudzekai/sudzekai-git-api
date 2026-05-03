@@ -29,7 +29,7 @@ func enableCORS(next http.Handler) http.Handler {
 
 func main() {
 	var (
-		reposPath = flag.String("repos-path", "git/repos", "Path to git repositories folder")
+		reposPath = flag.String("repos-path", "repos", "Path to git repositories folder")
 		apiPort   = flag.String("port", "8081", "API server port")
 	)
 
