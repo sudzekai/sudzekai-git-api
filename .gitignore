@@ -1,4 +1,5 @@
-/repos/
+cmd/repos/
+cmd/apps/
 
 *.exe
 app
