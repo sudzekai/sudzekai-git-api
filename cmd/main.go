@@ -47,7 +47,7 @@ func main() {
 
 	handler := enableCORS(mux)
 
-	serverAddr := ":" + *apiPort
+	serverAddr := "0.0.0.0:" + *apiPort
 	log.Printf("Server starting on %s", serverAddr)
 
 	if err := http.ListenAndServe(serverAddr, handler); err != nil {
