@@ -4,6 +4,7 @@ import (
 	"flag"
 	"log"
 	"net/http"
+	"os"
 
 	"sudzekai-git-api/internal/api/handlers"
 	"sudzekai-git-api/internal/dal/repositories"
@@ -12,12 +13,10 @@ import (
 // CORS middleware
 func enableCORS(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Разрешаем запросы с любого источника
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
-		// Обрабатываем preflight запросы
 		if r.Method == "OPTIONS" {
 			w.WriteHeader(http.StatusOK)
 			return
@@ -35,13 +34,17 @@ func main() {
 
 	flag.Parse()
 
+	// Создаём папку для репозиториев, если её нет
+	if err := os.MkdirAll(*reposPath, 0755); err != nil {
+		log.Fatalf("Failed to create repos directory: %v", err)
+	}
+
 	log.Printf("Git repositories path: %s", *reposPath)
 	log.Printf("API server starting on port %s", *apiPort)
 
 	mux := http.NewServeMux()
 	RegisterReposEndpoints(mux, *reposPath)
 
-	// Оборачиваем mux в CORS
 	handler := enableCORS(mux)
 
 	serverAddr := ":" + *apiPort
